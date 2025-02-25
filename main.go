@@ -45,8 +45,8 @@ func main() {
 		panic(err)
 	}
 
-	b.RegisterHandler(bot.HandlerTypeMessageText, "/start", handleStart)
-	b.RegisterHandler(bot.HandlerTypeCallbackQuery, handleCallback)
+	b.RegisterHandler(bot.HandlerTypeMessageText, "/start", handleStart, nil)
+	b.RegisterHandler(bot.HandlerTypeCallbackQuery, "draw_card", handleCallback, nil)
 
 	fmt.Println("Bot is running...")
 	b.Start(context.Background())
@@ -77,7 +77,7 @@ func handleCallback(ctx context.Context, b *bot.Bot, callback *models.CallbackQu
 		if callback.Message != nil && callback.Message.Chat != nil {
 			b.SendPhoto(ctx, &bot.SendPhotoParams{
 				ChatID: callback.Message.Chat.ID,
-				Photo:  models.FileURL(card.ImagePath),
+				Photo:  bot.FileURL(card.ImagePath),
 				Caption: fmt.Sprintf("Card: %s\n\nInterpretation: %s", card.Name, card.Interpretation),
 			})
 		}
